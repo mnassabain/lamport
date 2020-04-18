@@ -23,8 +23,9 @@ spawnN(N) when N > 0 ->
 spawnN(0, _) ->
     done;
 spawnN(I, N) ->
-    % io:format("~w~n", [list_to_atom("pid" ++ integer_to_list(N))]),
-    spawn(lamport, process, [I, make_list(N)]),
+    Process = list_to_atom("pid" ++ integer_to_list(I)),
+    io:format("Creating process with name ~w~n", [Process]),
+    register(Process, spawn(lamport, process, [I, make_list(N)])),
     spawnN(I - 1, N).
 
 
