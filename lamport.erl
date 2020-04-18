@@ -17,11 +17,14 @@ make_list(N) ->
 spawnN(0) ->
     done;
 spawnN(N) when N > 0 ->
-    % register & spawn process
-    % pass N to process so that it knows its index in table
-    % pass vector (list) of n-elements
+    spawnN(N, N).
+
+
+spawnN(0, _) ->
+    done;
+spawnN(I, N) ->
     io:format("~w~n", [list_to_atom("pid" ++ integer_to_list(N))]),
-    spawnN(N - 1).
+    spawnN(I - 1, N).
 
 
 test(N) ->
