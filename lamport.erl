@@ -14,9 +14,7 @@ make_list(N) ->
     [0 | make_list(N - 1)].
 
 
-spawnN(0) ->
-    done;
-spawnN(N) when N > 0 ->
+spawnN(N) when N >= 0 ->
     spawnN(N, N).
 
 
@@ -30,9 +28,36 @@ spawnN(I, N) ->
     spawnN(I - 1, N).
 
 
-process(I, Vector) ->
-    io:format("I am pid ~w, my vector is ~w~n", [I, Vector]).
+sendN(0, _) ->
+    done;
+sendN(N, Id) ->
+    Dest = list_to_atom("pid" ++ integer_to_list(N)),
+    Src = list_to_atom("pid" ++ integer_to_list(Id)),
+    io:format("~w sending message to ~w~n", [Src, Dest]),
+    Dest ! { message, Id },
+    sendN(N - 1, Id).
 
+
+receiveN(_, _, 0) ->
+    done;
+receiveN(Id, Vector, N) ->
+    receive
+        { message, Index } ->
+            % increment counter
+            CutL = lists:sublist(Vector,Index - 1),
+            CutR = lists:nthtail(Index, Vector),
+            NewVec = CutL ++ [lists:nth(Index,Vector) + 1] ++ CutR,
+            Pidname = list_to_atom("pid" ++ integer_to_list(Id)),
+            io:format("~w received message, V = ~w~n", [Pidname, NewVec]),
+            receiveN(Id, NewVec, N - 1)
+    end.
+
+
+process(I, Vector) ->
+    io:format("I am pid~w, my vector is ~w~n", [I, Vector]),
+    sendN(I - 1, I),
+    Nbps = length(Vector),
+    receiveN(I, Vector, Nbps - I).
 
 test(N) ->
     spawnN(N).
