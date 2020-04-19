@@ -16,5 +16,5 @@ L'affichage devra tracer de façon **très lisible** les estampilles des message
 
 ## Code
 
-
-## Remarques
+cf. `lamport.erl` pour le code complet.
+Le principe du programme est de créer N processus. Chacun de ces processus va envoyer un message à tous les processus précédents. Les vecteurs de lamport sont calculés et affichés à chaque étape.

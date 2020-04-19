@@ -90,7 +90,7 @@ receiveN(Id, Vector, N) ->
 
 
 process(I, Vector) ->
-    io:format("I am pid~w, my vector is ~w~n", [I, Vector]),
+    % io:format("I am pid~w, my vector is ~w~n", [I, Vector]),
     NewVect = sendN(I - 1, I, Vector),
     Nbps = length(NewVect),
     receiveN(I, NewVect, Nbps - I).
